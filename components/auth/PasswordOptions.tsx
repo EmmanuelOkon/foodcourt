@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { z, ZodType } from "zod";
 
 interface PasswordOptionsProps {
-  selectedCriteria: string[];
-  onCheckboxChange: (criterionId: string, checked: boolean) => void;
+  setSelectedCriteria: (criteria: boolean) => void;
 }
 
 interface PasswordCriteria {
@@ -11,33 +10,6 @@ interface PasswordCriteria {
   label: string;
   regex: RegExp;
 }
-
-const initialPasswordSchema = z
-  .string({
-    invalid_type_error: "Invalid password",
-    required_error: "Password is required",
-  })
-  .min(8, "Password should have at least 8 characters")
-  .refine((value): value is string => /[A-Z]/.test(value), {
-    message: "Password should contain at least 1 uppercase letter",
-    path: [],
-  })
-  .refine((value): value is string => /[a-z]/.test(value), {
-    message: "Password should contain at least 1 lowercase letter",
-    path: [],
-  })
-  .refine((value): value is string => /[0-9]/.test(value), {
-    message: "Password should contain at least 1 number",
-    path: [],
-  })
-  .refine((value): value is string => /[!@#$%^&*()]/.test(value), {
-    message: "Password should contain at least 1 special character",
-    path: [],
-  })
-  .refine((value): value is string => /.{8,}/.test(value), {
-    message: "Password should be at least 8 characters long",
-    path: [],
-  });
 
 const criteria: PasswordCriteria[] = [
   {
@@ -68,31 +40,15 @@ const criteria: PasswordCriteria[] = [
 ];
 
 export const PasswordOptions: React.FC<PasswordOptionsProps> = ({
-  selectedCriteria,
-  onCheckboxChange,
+  setSelectedCriteria
 }) => {
-  const [localSelectedCriteria, setSelectedCriteria] = useState<string[]>(
+  const [localSelectedCriteria, setLocalSelectedCriteria] = useState<string[]>(
     () => {
       const savedCriteria = localStorage.getItem("selectedCriteria");
       return savedCriteria ? JSON.parse(savedCriteria) : [];
     }
   );
-  const [passwordSchema, setPasswordSchema] = useState<ZodType<string>>(
-    initialPasswordSchema.refine(
-      (value) => {
-        return localSelectedCriteria.every((id) => {
-          const criterion = criteria.find((item) => item.id === id);
-          return criterion ? criterion.regex.test(value) : true;
-        });
-      },
-      {
-        message: "Password does not meet criteria",
-        path: [],
-      }
-    )
-  );
 
-  const [password, setPassword] = useState<string>("");
 
   const handleCheckboxChange = (criterionId: string, checked: boolean) => {
     const updatedCriteria = checked
@@ -101,32 +57,9 @@ export const PasswordOptions: React.FC<PasswordOptionsProps> = ({
 
     console.log(updatedCriteria);
 
-    setSelectedCriteria(updatedCriteria);
+    setLocalSelectedCriteria(updatedCriteria);
     localStorage.setItem("selectedCriteria", JSON.stringify(updatedCriteria));
-    onCheckboxChange(criterionId, checked);
-  };
-
-  useEffect(() => {
-    const updatedSchema = initialPasswordSchema;
-    criteria.forEach((item) => {
-      if (localSelectedCriteria.includes(item.id)) {
-        updatedSchema.refine(
-          (value): value is string => item.regex.test(value),
-          {
-            message: `Password should contain ${item.label}`,
-            path: [],
-          }
-        );
-      }
-    });
-    setPasswordSchema(updatedSchema);
-  }, [localSelectedCriteria]);
-
-  const isPasswordValid = () => {
-   return localSelectedCriteria.every((id) => {
-     const criterion = criteria.find((item) => item.id === id);
-     return criterion ? criterion.regex.test(password) : true;
-   });
+    setSelectedCriteria(checked);
   };
 
   return (
@@ -145,20 +78,6 @@ export const PasswordOptions: React.FC<PasswordOptionsProps> = ({
             <label className="text-sm font-normal">{item.label}</label>
           </div>
         ))}
-      </div>
-      <div>
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password"
-          className="mt-4 p-2 border rounded"
-          style={{ borderColor: isPasswordValid() ? "green" : "red" }}
-          disabled={localSelectedCriteria.length === 0}
-        />
-        {!isPasswordValid() && (
-          <span className="text-red-500">Password does not meet criteria</span>
-        )}
       </div>
     </div>
   );

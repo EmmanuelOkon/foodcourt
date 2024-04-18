@@ -10,7 +10,7 @@ export default function LoginPage() {
         Login to your Journal account
       </Text>
 
-      {/* <LoginForm  selectedCriteria /> */}
+      {/* <LoginForm selectedCriteria={selectedCriteria} /> */}
     </div>
   );
 }
