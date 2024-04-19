@@ -213,10 +213,6 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
         Password Strength: {getPasswordStrength()}
       </span>
 
-      {getPasswordStrength() === "Hard" && (
-        <div className="bg-red-500 h-4 w-4 ">hard</div>
-      )}
-
       <Button
         disabled={!isPasswordValid()}
         type="submit"
