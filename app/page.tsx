@@ -1,20 +1,19 @@
-import Text from "@/components/Text";
-// import { LoginForm } from "@/components/auth/LoginForm";
-import { IconBentArrow } from "@/components/icons/IconBentArrow";
-import { AuthSidebar } from "@/components/auth/AuthSidebar";
-
-import { AuthContainer } from "@/components/auth/AuthContainer";
 import Link from "next/link";
 
 export default function Page() {
   return (
-    <main className="grid grid-flow-col xl:grid-cols-2">
-      welcome
+    <main className="w-full items-center h-screen flex gap-10 flex-col bg-blue-200 justify-center">
       <div>
-        <Link href="/login">Login</Link>
+        <h1 className="text-5xl text-center">Welcome to Library</h1>
       </div>
-
-      
+      <div className="w-[400px] text-center ">
+        <Link
+          className="bg-primary text-white px-14 py-4 rounded-md w-full "
+          href="/login"
+        >
+          Login
+        </Link>
+      </div>
     </main>
   );
 }

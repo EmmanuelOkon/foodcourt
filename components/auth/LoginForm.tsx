@@ -151,11 +151,12 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
 
   return (
     <Form {...form}>
-      {/* <form className="grid gap-6" onSubmit={form.handleSubmit(handleSubmit)}> */}
+      
       <FormField
         control={form.control}
         name="email"
         disabled={localSelectedCriteria.length === 0}
+        
         render={({ field }) => (
           <FormItem>
             <FormLabel>Email Address</FormLabel>
@@ -178,10 +179,10 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
               type={showPassword ? "text" : "password"}
               placeholder="Input your password"
               disabled={localSelectedCriteria.length === 0}
-              className={`mt-4 ${
+              className={`mt-4 w-full ${
                 isPasswordValid() ? "border-green-500" : "border-red-500"
               }`}
-              // Ends update
+              
               endContent={
                 <Button
                   type="button"
@@ -225,7 +226,7 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
       >
         Login
       </Button>
-      {/* </form> */}
+      
     </Form>
   );
 };

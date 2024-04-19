@@ -1,5 +1,5 @@
 import Text from "@/components/Text";
-// import { LoginForm } from "@/components/auth/LoginForm";
+
 import { IconBentArrow } from "@/components/icons/IconBentArrow";
 import { AuthSidebar } from "@/components/auth/AuthSidebar";
 
@@ -11,10 +11,6 @@ export default function Page() {
       <AuthSidebar />
 
       <AuthContainer>
-        {/* <LoginForm
-          setSelectedCriteria={setSelectedCriteria}
-          selectedCriteria={selectedCriteria}
-        /> */}
         <div className="grid gap-8 p-4 w-full">
           <Text
             size="text-2xl"
@@ -25,6 +21,7 @@ export default function Page() {
             Login to your Library account
           </Text>
         </div>
+        
       </AuthContainer>
     </main>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { z, ZodType } from "zod";
+
 
 interface PasswordOptionsProps {
   setSelectedCriteria: (criteria: boolean) => void;
@@ -74,6 +74,8 @@ export const PasswordOptions: React.FC<PasswordOptionsProps> = ({
               type="checkbox"
               checked={localSelectedCriteria.includes(item.id)}
               onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
+
+              className="w-5 h-5"
             />
             <label className="text-sm font-normal">{item.label}</label>
           </div>
