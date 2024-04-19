@@ -26,7 +26,7 @@ export const AuthSidebar = () => {
             size="text-4xl"
             weight="font-bold"
           >
-            Welcome to Journal, Where Knowledge Takes Flight!
+            Welcome to Library, Where Knowledge Takes Flight!
           </Text>
 
           <Text

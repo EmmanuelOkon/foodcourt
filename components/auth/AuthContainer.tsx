@@ -15,12 +15,13 @@ type AuthContainerProps = {
 export const AuthContainer: FC<AuthContainerProps> = ({ children }) => {
   const [selectedCriteria, setSelectedCriteria] = useState<boolean>(false);
 
-  console.log(selectedCriteria);
+  // console.log(selectedCriteria);
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-hscreen">
       <div className="flex gap-4 relativ flexgrow flex-col items-center justify-center w-full md:max-w-md lg:max-w-xl max-w-full px-4 py-8 bg-white rounded-lg">
-        <div className="flex items-center w-full justify-end absolut top14 right5 ">
+        <div>Please select your preferred password criteria here</div>
+        <div className="flex items-center w-full justify-end">
           <Select>
             <SelectTrigger className="w- ">Password Settings</SelectTrigger>
             <SelectContent>

@@ -2,7 +2,6 @@ import { FC } from "react";
 import { twMerge } from "tailwind-merge";
 import { IconLogo } from "./icons/IconLogo";
 
-
 type AppLogoProps = {
   background?: "light" | "dark";
 };
@@ -16,7 +15,7 @@ export const AppLogo: FC<AppLogoProps> = ({ background = "light" }) => {
           background === "light" ? "text-body" : "text-white"
         )}
       >
-        Journal
+        Library
       </span>
     </div>
   );

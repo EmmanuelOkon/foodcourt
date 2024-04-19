@@ -14,22 +14,22 @@ interface PasswordCriteria {
 const criteria: PasswordCriteria[] = [
   {
     id: "uppercase",
-    label: "Uppercase Letter",
+    label: "At least 1 Uppercase Letter",
     regex: /[A-Z]/,
   },
   {
     id: "lowercase",
-    label: "Lowercase Letter",
+    label: "At least 1 Lowercase Letter",
     regex: /[a-z]/,
   },
   {
-    id: "number",
-    label: "Number",
+    id: "figure",
+    label: "At least 1 figure",
     regex: /[0-9]/,
   },
   {
     id: "specialCharacter",
-    label: "Special Character",
+    label: "At least 1 Special Character",
     regex: /[!@#$%^&*()]/,
   },
   {

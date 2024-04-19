@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { z, ZodType } from "zod";
 import { Button } from "../ui/button";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
@@ -6,6 +7,7 @@ import { Input } from "../ui/input";
 import { FieldValues, SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 interface PasswordOptionsProps {
   selectedCriteria: boolean;
@@ -75,12 +77,14 @@ const criteria: PasswordCriteria[] = [
 
 export const LoginForm: React.FC<PasswordOptionsProps> = ({
   selectedCriteria,
-  setSelectedCriteria
+  setSelectedCriteria,
 }) => {
   const [localSelectedCriteria, setLocalSelectedCriteria] = useState<string[]>(
     []
   );
   const [showPassword, setShowPassword] = React.useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     const updatedSchema = initialPasswordSchema;
@@ -95,7 +99,6 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
         );
       }
     });
-    // form.setResolver(zodResolver(updatedSchema));
   }, [localSelectedCriteria]);
 
   useEffect(() => {
@@ -111,6 +114,8 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
 
   const handleSubmit: SubmitHandler<FieldValues> = (data) => {
     console.log(data);
+    toast.success("Login successful");
+    router.push("/");
   };
 
   const password = useWatch({ control, name: "password" });
@@ -122,74 +127,105 @@ export const LoginForm: React.FC<PasswordOptionsProps> = ({
     });
   };
 
+  const getPasswordStrength = (): string => {
+    const containsUppercase = /[A-Z]/.test(password);
+    const containsLowercase = /[a-z]/.test(password);
+    const containsNumber = /[0-9]/.test(password);
+    const containsSpecialChar = /[!@#$%^&*()]/.test(password);
+    const isOverTenChars = password?.length > 10;
+
+    if (
+      containsUppercase &&
+      containsLowercase &&
+      containsNumber &&
+      containsSpecialChar &&
+      isOverTenChars
+    ) {
+      return "Hard";
+    } else if (containsUppercase && containsLowercase && containsSpecialChar) {
+      return "Medium";
+    } else {
+      return "Easy";
+    }
+  };
+
   return (
     <Form {...form}>
-      <form className="grid gap-6" onSubmit={form.handleSubmit(handleSubmit)}>
-        <FormField
-          control={form.control}
-          name="email"
-          disabled={localSelectedCriteria.length === 0}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email Address</FormLabel>
-              <Input
-                autoFocus
-                placeholder="Input your registered email"
-                {...field}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Input your password"
-                disabled={localSelectedCriteria.length === 0}
-                className={`mt-4 p-2 border rounded ${
-                  isPasswordValid() ? "border-green-500" : "border-red-500"
-                }`}
-                // Ends update
-                endContent={
-                  <Button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    variant="ghost"
-                    size="sm"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4 text-body" />
-                    ) : (
-                      <Eye className="w-4 h-4 text-body" />
-                    )}
-                  </Button>
-                }
-                {...field}
-              />
-              {!isPasswordValid() && (
-                <span className="text-red-500">
-                  Password does not meet criteria
-                </span>
-              )}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      {/* <form className="grid gap-6" onSubmit={form.handleSubmit(handleSubmit)}> */}
+      <FormField
+        control={form.control}
+        name="email"
+        disabled={localSelectedCriteria.length === 0}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Email Address</FormLabel>
+            <Input
+              autoFocus
+              placeholder="Input your registered email"
+              {...field}
+            />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="password"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="Input your password"
+              disabled={localSelectedCriteria.length === 0}
+              className={`mt-4 ${
+                isPasswordValid() ? "border-green-500" : "border-red-500"
+              }`}
+              // Ends update
+              endContent={
+                <Button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  variant="ghost"
+                  size="sm"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 text-body" />
+                  ) : (
+                    <Eye className="w-4 h-4 text-body" />
+                  )}
+                </Button>
+              }
+              {...field}
+            />
+            {!isPasswordValid() && (
+              <span className="text-red-500">
+                Password does not meet criteria
+              </span>
+            )}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-        <Button
-          disabled={!form.formState.isDirty}
-          type="submit"
-          size="lg"
-          className="w-full"
-        >
-          Login
-        </Button>
-      </form>
+      <span className="text-sm text-gray-500">
+        Password Strength: {getPasswordStrength()}
+      </span>
+
+      {getPasswordStrength() === "Hard" && (
+        <div className="bg-red-500 h-4 w-4 ">hard</div>
+      )}
+
+      <Button
+        disabled={!isPasswordValid()}
+        type="submit"
+        size="lg"
+        className="w-full"
+        onClick={handleSubmit}
+      >
+        Login
+      </Button>
+      {/* </form> */}
     </Form>
   );
 };

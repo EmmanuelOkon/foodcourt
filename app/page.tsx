@@ -1,12 +1,20 @@
+import Text from "@/components/Text";
+// import { LoginForm } from "@/components/auth/LoginForm";
+import { IconBentArrow } from "@/components/icons/IconBentArrow";
+import { AuthSidebar } from "@/components/auth/AuthSidebar";
+
+import { AuthContainer } from "@/components/auth/AuthContainer";
 import Link from "next/link";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="grid grid-flow-col xl:grid-cols-2">
+      welcome
       <div>
-        <p>This is home</p>
-        <Link href="/auth/login">Login</Link>
+        <Link href="/login">Login</Link>
       </div>
+
+      
     </main>
   );
 }
